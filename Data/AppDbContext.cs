@@ -10,13 +10,12 @@ namespace TaskManagerAPI.Data
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<TaskItem> Tasks { get; set; } // Changed to TaskItem
+        public DbSet<TaskItem> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // User configuration
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -29,14 +28,12 @@ namespace TaskManagerAPI.Data
                 entity.HasIndex(e => e.Email).IsUnique();
                 entity.HasIndex(e => e.Username).IsUnique();
 
-                // One-to-many relationship: User has many TaskItems
                 entity.HasMany(e => e.Tasks)
                       .WithOne(e => e.User)
                       .HasForeignKey(e => e.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // TaskItem configuration
             modelBuilder.Entity<TaskItem>(entity =>
             {
                 entity.HasKey(e => e.Id);
