@@ -8,11 +8,9 @@ using TaskManagerAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Configure Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -47,12 +45,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// JWT Authentication - SIMPLIFIED AND WORKING
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyThatIsAtLeast32CharactersLong!";
 var key = Encoding.UTF8.GetBytes(jwtKey);
 
@@ -72,8 +68,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
-        
-        // For debugging
+
         options.Events = new JwtBearerEvents
         {
             OnAuthenticationFailed = context =>
@@ -89,7 +84,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -100,14 +94,12 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Register services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -120,7 +112,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Initialize database
 try
 {
     using var scope = app.Services.CreateScope();
