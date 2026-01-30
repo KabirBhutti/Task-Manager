@@ -21,10 +21,8 @@ namespace TaskManagerAPI.Models
         public string Priority { get; set; } = "Medium";
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Foreign key
         public int UserId { get; set; }
 
-        // Navigation property
         [ForeignKey("UserId")]
         public User? User { get; set; }
     }
