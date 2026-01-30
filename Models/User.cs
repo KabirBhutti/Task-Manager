@@ -22,15 +22,12 @@ namespace TaskManagerAPI.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? LastLoginAt { get; set; }
 
-        // Refresh token for JWT renewal
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
 
-        // Navigation property
         public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
     }
 
-    // Role constants to avoid magic strings
     public static class UserRoles
     {
         public const string Admin = "Admin";
